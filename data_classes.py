@@ -1,6 +1,7 @@
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
+import matplotlib.pyplot as plt
 
 class DataExtractor:
     def __init__(self, url):
@@ -29,10 +30,24 @@ class DataExtractor:
 
         return cloud_data
 
-class DataAnalisierer:
-    def __init__(self, data):
-        self.data = data
-        self.df = pd.DataFrame(self.data)
+class DataAnalyzer:
 
-    def get_statistics(self):
-        return self.df.describe()
+    def __init__(self, data):
+        self.data = pd.DataFrame(data)
+
+    def analyze_data(self):
+        print(self.data.describe(include='all'))
+
+    def visualize_data(self):
+        self.data['LowTemp'] = pd.to_numeric(self.data['LowTemp'])
+        self.data['HighTemp'] = pd.to_numeric(self.data['HighTemp'])
+        
+        self.data['AvgTemp'] = (self.data['LowTemp'] + self.data['HighTemp']) / 2
+        sorted_data = self.data.sort_values(by='AvgTemp')
+
+        plt.figure(figsize=(12, 7))
+        plt.barh(sorted_data['LocationLink'].str.split('/').str[-3], sorted_data['AvgTemp'], color='skyblue')
+        plt.xlabel('Durchschnittstemperatur (°C)')
+        plt.title('Durchschnittstemperatur in verschiedenen Städten')
+        plt.tight_layout()
+        plt.show()

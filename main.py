@@ -1,11 +1,9 @@
-from data_classes import DataExtractor, DataAnalisierer
+from data_classes import DataExtractor, DataAnalyzer
 
 if __name__ == '__main__':
-    # Daten extrahieren
     extractor = DataExtractor('https://www.wetter.ch/')
-    extracted_data = extractor.fetch_data()
+    weather_data = extractor.fetch_data()
 
-    # Daten analysieren
-    analyzer = DataAnalisierer(extracted_data)
-    stats = analyzer.get_statistics()
-    print(stats)
+    analyzer = DataAnalyzer(weather_data)
+    analyzer.analyze_data()
+    analyzer.visualize_data()
